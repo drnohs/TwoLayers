@@ -33,11 +33,14 @@ def numerical_gradient_2d(f, X):
 
 def numerical_gradient(f, x):
     h = 1e-4 # 0.0001
+    cnt = 0 # count for Numerical Differentiation
     grad = np.zeros_like(x)
     
     it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
     while not it.finished:
         idx = it.multi_index
+        cnt +=1
+
         tmp_val = x[idx]
         x[idx] = tmp_val + h
         fxh1 = f(x) # f(x+h)
@@ -49,4 +52,4 @@ def numerical_gradient(f, x):
         x[idx] = tmp_val # 値を元に戻す
         it.iternext()   
         
-    return grad
+    return grad, cnt

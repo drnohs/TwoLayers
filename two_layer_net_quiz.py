@@ -2,7 +2,7 @@
 import sys, os
 sys.path.append(os.pardir)  # 親ディレクトリのファイルをインポートするための設定
 from common.functions import *
-from common.gradient import numerical_gradient
+from common.gradient_quiz import numerical_gradient
 import numpy as np
 
 
@@ -46,12 +46,23 @@ class TwoLayerNet:
         loss_W = lambda W: self.loss(x, t)
         
         grads = {}
-        grads['W1'] = numerical_gradient(loss_W, self.params['W1'])
-        grads['b1'] = numerical_gradient(loss_W, self.params['b1'])
-        grads['W2'] = numerical_gradient(loss_W, self.params['W2'])
-        grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
-        
-        return grads
+        count = {} # Dictionary init
+        total_count = 0
+
+        grads['W1'], count['W1'] = numerical_gradient(loss_W, self.params['W1'])
+        grads['b1'], count['b1'] = numerical_gradient(loss_W, self.params['b1'])
+        grads['W2'], count['W2']  = numerical_gradient(loss_W, self.params['W2'])
+        grads['b2'], count['b2']  = numerical_gradient(loss_W, self.params['b2'])
+
+        for key in count.keys():
+            total_count += count[key]
+            print("Diff cnt. for ", key, ": ", count[key] )
+                # W1 : 39200 = 784(28x28) x 50
+                # b1 : 50
+                # W2 : 500 = 50 x 10
+                # b2 : 10
+
+        return grads, total_count
         
     def gradient(self, x, t):
         W1, W2 = self.params['W1'], self.params['W2']
